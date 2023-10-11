@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Mi Perfil
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card class="info">
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Mi Perfil</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4">
+            <ion-img width="300px" class="img-thumbnail mt-3" *ngIf="usuario.foto" [src]="usuario.foto" alt="Imagen"></ion-img>
+          </ion-col>
+          <ion-col size="8">
+            <h5 class="ion-text-left">Información de Usuario</h5>
+            <ion-list lines="none">
+              <ion-item><b>Correo:</b> {{usuario.correo}}</ion-item>
+              <ion-item><b>Nombre:</b> {{usuario.nombre}} {{usuario.apellido}}</ion-item>
+              <ion-item><b>Teléfono:</b> {{usuario.telefono}}</ion-item>
+              <ion-item>
+                <p *ngIf="!cambioContra"><b >Password:</b> {{usuario.password}}</p>
+                <ion-button fill="clear" (click)="cambiar()">
+                  <ion-icon *ngIf="!cambioContra" name="create"></ion-icon>
+                  <ion-icon *ngIf="cambioContra" name="close"></ion-icon>
+                </ion-button>
+                <div *ngIf="cambioContra">
+                  <ion-input aria-label="Primary input" color="primary" [(ngModel)]="usuario.password" type="text"></ion-input>
+                  <ion-button size="small" (click)="cambiarC(usuario)" >Cambiar</ion-button>
+                </div>
+              </ion-item>
+              <ion-item><b>Estado:</b> {{usuario.estado}}</ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+<ion-button (click)="logOut()">Logout</ion-button>
+</ion-content>

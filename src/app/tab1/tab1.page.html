@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Anuncios
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Anuncios</ion-title>
+    </ion-toolbar>
+  </ion-header>
+     
+  <div class="ion-padding">
+    <ion-card *ngFor="let anuncios of anuncios">
+      <ion-card-header>
+        <img [src]="anuncios.imagen">
+     
+        
+      </ion-card-header>
+
+      <ion-card-content>
+        <p>
+          {{anuncios.texto}}
+        </p>
+        <p>
+          {{anuncios.fechaInicio}}
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+
+
+</ion-content>
