@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ServicioService } from '../servicio.service';
-import { forkJoin } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-tab2',
@@ -11,15 +11,16 @@ export class Tab2Page implements OnInit {
 misReservaciones:any=[];
 viajes:any=[];
 fechaFinalizada=false;
+reservacion:any={}
+misReservas: any[] = []; // Inicializa misReservaciones como un arreglo vacío
+comentario=""
 lugares:any=[];
 fechaFinalizacion:any;
-reservacion=false
-ngOnInit(){
-  const observables = [
-    this.getReservaciones(10),
-    this.getReservaciones(11)
-  ];
+reservacionTerminada=false
+viajesFiltrados: any[] = [];
 
+ngOnInit(){
+  this.getReservaciones(10);
 }
 usuarioSesion:any=JSON.parse(localStorage.getItem("usuario"));
 
@@ -35,7 +36,8 @@ usuarioSesion:any=JSON.parse(localStorage.getItem("usuario"));
       this.viajes=data;
       console.log(data)
  
-      
+      this.viajesFiltrados = this.viajes.filter(viaje => viaje.idViaje === this.reservacion.idViaje);
+console.log(this.viajesFiltrados)
     
      
    
@@ -52,26 +54,28 @@ usuarioSesion:any=JSON.parse(localStorage.getItem("usuario"));
 
 
   getReservaciones(id){
-    this.servicio.getReservacionPorCorreoEIdEstado(this.usuarioSesion.correo,id).subscribe((data:any)=>{
-this.misReservaciones=data; 
-console.log(data)  
-
-this.misReservaciones.forEach(element => {
-  element.fechaFinalizacion
-    this.viajes.forEach(element2 => {
-      if(element.idViaje==element2.idViaje)
-      {
-        const fechaRegreso=Date.parse(element2.fechaRegreso);
-        const fechaFinalizacion=Date.parse(this.comprobarFechaDeFinalizacion());
-        console.log(fechaRegreso,fechaFinalizacion)
-        if(fechaRegreso>fechaFinalizacion)
-        {this.reservacion=true;}  
-      }
-    }
-    );
- }  );   
-}   )
-  } 
+     this.servicio.getReservacionPorCorreoEIdEstado(this.usuarioSesion.correo, id).subscribe((data:any)=>{
+        this.misReservaciones=data;
+    
+  
+    
+  
+        this.misReservaciones.forEach(element => {
+          element.fechaFinalizacion
+          this.viajes.forEach(element2 => {
+            if (element.idViaje == element2.idViaje) {
+              const fechaRegreso = Date.parse(element2.fechaRegreso);
+              const fechaHoy = Date.parse(this.comprobarFechaDeFinalizacion());
+  
+              this.reservacionTerminada = true;
+            }
+          });
+        });
+  
+      })
+    
+  }
+  
     
   
 
@@ -88,4 +92,41 @@ return fechaFormateada
 
 
 }
+
+reservacionesPasadas() {
+  this.fechaFinalizada = !this.fechaFinalizada; // Cambia el valor de fechaFinalizada
+
+  if (this.fechaFinalizada) {
+    // Realiza acciones cuando fechaFinalizada es true
+    this.getReservaciones(11);
+  } else {
+    this.getReservaciones(10);
+    // Realiza acciones cuando fechaFinalizada es false
+    // Puedes agregar cualquier otra lógica que desees aquí
+  }
+}
+
+enviarComentario(comentario,reservacion){
+  var fechaActual = new Date();
+  var dia = fechaActual.getDate();
+  var mes = fechaActual.getMonth() + 1; // Los meses son 0-based
+  var ano = fechaActual.getFullYear();
+  
+  var fechaFormateada = dia + '-' + mes + '-' + ano;
+  const partesFecha = fechaFormateada.split('-'); // Dividir la fecha en partes
+  const fechaReformateada = partesFecha[2] + '-' + partesFecha[1] + '-' + partesFecha[0]; // Reformatear a AAAA-MM-DD
+let formulario={
+  texto:comentario,
+  correo:this.usuarioSesion.correo,
+  fecha:fechaReformateada,
+  idViaje:reservacion.idViaje
+  }
+  this.servicio.enviarComentario(formulario).subscribe((data:any)=>{
+  
+
+    console.log(data)
+    this.getReservaciones(10);
+  })
+}
+
 }

@@ -1,34 +1,40 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 2
+MIS RESERVACIONES
     </ion-title>
+
   </ion-toolbar>
+
 </ion-header>
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+<ion-content>
+  <ion-button (click)="reservacionesPasadas()">
+    <span *ngIf="!fechaFinalizada; else regresar"  style="width: 50px;">Historial</span></ion-button>
+    <ng-template #regresar>Regresar</ng-template>
 <ion-card *ngFor="let reservacion of misReservaciones">
  
   <div *ngFor="let viaje of viajes "  class="border" >
-      <div *ngIf="reservacion.idViaje == viaje.idViaje" >
-        {{viaje.idViaje}}{{reservacion.idViaje}}{{viaje.idEstado}}
+      <div *ngIf="reservacion.idViaje == viaje.idViaje" style="display:flex;flex-direction: column;justify-content: center;align-items: center;">
+              <h2 *ngIf="fechaFinalizada;else estadoActivo" class="text-center">ESTADO: FINALIZADA</h2>
+              <ng-template #estadoActivo><h2>ESTADO: ACTIVO</h2></ng-template>
         <div >
           <p>DESTINO: <span><b>{{viaje.destino | viajes:lugares}}</b></span></p>
           <p>ORIGEN: <span><b>{{viaje.origen | viajes:lugares}}</b></span></p>
           <p>FECHA DE PARTIDA: <span><b>{{viaje.fechaPartida | date: 'dd/MM/yyyy'}}</b></span></p>
           <p>FECHA FINALIZACION: <span><b>{{viaje.fechaRegreso | date:'dd/MM/yyyy'}}</b></span></p>
           <p>DESCRIPCION: <span><b>{{viaje.descripcion}}</b></span></p>
-          <p>CANTIDAD CONFIRMADA <span>{{reservacion.cantidadPasajeros}}</span></p>
+          
+          <p *ngIf="reservacion.idEstado!=11">CANTIDAD CONFIRMADA <span>{{reservacion.cantidadPasajeros}}</span></p>
+          <ion-textarea [(ngModel)]="comentario" *ngIf="reservacion.idEstado==11" style="border:1px solid" label="Escribe un comentario" labelPlacement="floating" fill="solid" placeholder="Enter text"></ion-textarea>
+          <ion-button *ngIf="reservacion.idEstado==11"  (click)="enviarComentario(comentario,reservacion)">Enviar</ion-button>
         </div>
         </div>
-        <p >Escribe un comentario de tu viaje por favor</p>
     </div>
   
   
   
 </ion-card>
+
+
 </ion-content>

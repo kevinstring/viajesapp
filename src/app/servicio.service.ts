@@ -59,4 +59,11 @@ postViaje(viaje: any) {
   return this.http.post(url + 'viaje/guardar', viaje);
     }
 
+
+    enviarComentario(comentario: any) {
+      return this.http.post(url + 'comentario/guardar', comentario);
+    }
+    getComentarios() {
+      return this.http.get(url + 'comentario/buscar');
+    }
 }

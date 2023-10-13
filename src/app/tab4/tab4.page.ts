@@ -51,7 +51,7 @@ this.reservacion=true;
 
     });
   }
-    getReservaciones(){
+  getReservaciones(){
     this.servicio.getReservacionPorCorreoEIdEstado(this.usuarioSesion.correo,9).subscribe((data:any)=>{
 this.reservacionesPorUsuario=data; 
 console.log(data)   }
