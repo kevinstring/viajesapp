@@ -4,6 +4,7 @@ const url="http://localhost:8080/";
 const httpOptions = {
   headers:new HttpHeaders({
     "Content-Type":"application/json",
+    'Access-Control-Allow-Origin': 'http://localhost:8100'
   })
   }
 
@@ -18,7 +19,10 @@ export class ServicioService {
     return this.http.post(url+"usuario/login",usuario,httpOptions);
   }
   
-
+  getUsuarios()
+{
+  return this.http.get('http://localhost:8080/usuario/buscar')
+}
   getEver(busqueda:string){
    return this.http.get(`${url}${busqueda}/login`);
   }

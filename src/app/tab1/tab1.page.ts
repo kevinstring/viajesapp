@@ -15,7 +15,7 @@ anuncios:any=[];
   getAnuncios(){
     this.servicio.getAnuncios().subscribe((data:any)=>{
       this.anuncios=data;
-      console.log(this.anuncios)
+      console.log(data)
     })
   }
 

@@ -17,6 +17,8 @@ export class AppComponent {
    t = localStorage.getItem("usuario");
   sesionIniciada=false;
   constructor(private servicio:ServicioService,private router:Router) {
+    this.servicio.getUsuarios().subscribe(a=>console.log(a))
+
     if(this.t){
       this.sesionIniciada=true;
     }else{

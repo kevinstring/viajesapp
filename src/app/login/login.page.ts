@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
 
   
 ingresar(usuario:{}){
- 
+
   this.servicio.getLogin(usuario).subscribe((data:any)=>{
     if(data!=null && data!=undefined && data!=""){
       localStorage.setItem("usuario",JSON.stringify(data))
